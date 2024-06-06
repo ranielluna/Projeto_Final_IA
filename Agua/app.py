@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Carregar o modelo treinado
-with open('.venv\model.pkl', 'rb') as f:
+with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # Função para converter os dados do formulário para um array NumPy
