@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-heatmap.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+    <title>AguaPotavel</title>
+</head>
+
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="">
+        <nav>
+            <a href="#intro">INICIO</a>
+            <a href="#graficos">GRAFICOS</a>
+            <a href="#footer">SOBRE</a>
+        </nav>
+    </header>
+    <p id="intro">Esta base de dados contém informações sobre diversos atributos de qualidade da água, como pH, dureza,
+        sólidos
+        dissolvidos, entre outros, juntamente com uma classificação indicando se a água é potável ou não. O objetivo é
+        desenvolver modelos preditivos para avaliar a potabilidade da água com base nessas características, visando
+        garantir a segurança da água para consumo humano. <br><br>
+        O principal objetivo deste conjunto de dados é avaliar e prever a potabilidade da água com base em atributos de
+        qualidade da água. Ele pode ser usado para avaliar a segurança e adequação das fontes de água para consumo
+        humano, tomar decisões informadas sobre tratamento de água e garantir conformidade com padrões de qualidade da
+        água.
+    </p>
+    <section id="graficos">
+        <div id="container">
+            <form action="{{ url_for('predict') }}" method="post">
+                <div>
+                    <label for="">PH:</label>
+                    <input type="number" id="ph" name="ph" min="0" max="14" step="0.01" required><br><br>
+                </div>
+                <div>
+                    <label for="">Hardness:</label>
+                    <input type="number" id="hardness" name="hardness" min="47.432" max="323.124" step="0.01" required
+                        oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Solids:</label>
+                    <input type="number" id="solids" name="solids" min="320.943" max="61227.196" step="0.01" required
+                        oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Chloramines:</label>
+                    <input type="number" id="chloramines" name="chloramines" min="0.352" max="13.127" step="0.01"
+                        required oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Sulfate:</label>
+                    <input type="number" id="sulfate" name="sulfate" min="129" max="481.031" step="0.01" required
+                        oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Conductivity:</label>
+                    <input type="number" id="conductivity" name="conductivity" min="181.484" max="753.343" step="0.01"
+                        required oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Organic Carbon:</label>
+                    <input type="number" id="organic_carbon" name="organic_carbon" min="2.2" max="28.3" step="0.01"
+                        required oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Trihalomethanes:</label>
+                    <input type="number" id="trihalomethanes" name="trihalomethanes" min="0.738" max="124" step="0.01"
+                        required oninput="checkValue(this)"><br><br>
+                </div>
+                <div>
+                    <label for="">Turbidity:</label>
+                    <input type="number" id="turbidity" name="turbidity" min="1.45" max="6.739" step="0.01" required
+                        oninput="checkValue(this)"><br><br>
+                </div>
+                <input id="submit" type="submit" value="Enviar">
+            </form>
+            <div id="a"><img src="{{ url_for('static', filename='img/modelos.png') }}" alt=""></div>
+        </div>
+        <div id="container">
+            <div id="b"><img src="{{ url_for('static', filename='img/pizza.png') }}" alt=""></div>
+            <div id="c"><img src="{{ url_for('static', filename='img/histograma.png') }}" alt=""></div>
+            <div id="c"><img src="{{ url_for('static', filename='img/heatmap.png') }}" alt=""></div>
+        </div>
+        <div id="container">
+            <div id="d"><img src="{{ url_for('static', filename='img/matrix.png') }}" alt=""></div>
+        </div>
+    </section>
+    <footer id="footer">
+        <div>
+            <h3>Alunos</h3>
+            <h4>Raniel Luna</h4>
+            <h4>Lucca Amaral</h4>
+            <h4>Luis Brasiliano</h4>
+        </div>
+        <div>
+            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
+                    href="https://github.com/ranielluna">ranielluna</a></div>
+            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
+                    href="https://github.com/renelucca">renelucca</a></div>
+            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
+                    href="https://github.com/luisbrasiliano21">luisbrasiliano21</a></div>
+        </div>
+    </footer>
+</body>
+<script id="script">
+    const potavel = document.getElementById("resultado")
+    function checkValue(input) {
+        if (input.validity.rangeUnderflow) {
+            potavel.style.color = "blue"
+            input.setCustomValidity("O valor inserido é menor que o mínimo permitido.");
+        } else if (input.validity.rangeOverflow) {
+            potavel.style.color = "red"
+            input.setCustomValidity("O valor inserido é maior que o máximo permitido.");
+        } else {
+            input.setCustomValidity("");
+        }
+    }
+
+    function validateForm() {
+        var inputs = document.querySelectorAll('input[type="number"]');
+        for (var i = 0; i < inputs.length; i++) {
+            if (!inputs[i].checkValidity()) {
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/histograma.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/pizza.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/heatmap.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/rank.js') }}"></script>
+
+</html>

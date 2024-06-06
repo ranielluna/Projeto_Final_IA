@@ -1,0 +1,32 @@
+header{
+    width: 100%;
+    display: flex;
+    padding: 1em 6em;
+    gap: 18em;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+}
+nav{
+    display: flex;
+    gap: 3em;
+}
+nav a {
+    font-size: 0.8em;
+    padding: 0.6em 1em;
+    border-radius: 1em;
+    animation: 0.4s ease;
+}
+nav a:hover{
+    transition: 0.4s;
+    background-color: #644564;
+    color: #fff;
+}
+header img{
+    width: 2.4em;
+    padding: 0.5em;
+    border-radius: 50%;
+    background-color: #644564;
+}
