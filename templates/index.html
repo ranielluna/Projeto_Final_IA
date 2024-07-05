@@ -1,116 +1,467 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+    <head>
+        <title>Previsão de Qualidade da Água</title>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/icons8-água-32.png')}}">
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f0f8ff;
+        position: relative;
+        overflow-x: hidden;
+    }
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+        padding: 0 20px;
+    }
+    header {
+        background: #0077be;
+        color: #ffffff;
+        padding: 20px 0;
+        border-bottom: #0077be 3px solid;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+    header a {
+        color: #ffffff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 16px;
+    }
+    header #branding {
+        float: left;
+    }
+    header #branding h1 {
+        margin: 0;
+    }
+    header nav {
+        float: right;
+        margin-top: 10px;
+    }
+    header nav ul {
+        list-style: none;
+    }
+    header nav li {
+        display: inline;
+        padding: 0 20px;
+    }
+    header .highlight, header .current a {
+        color: #ffffff;
+        font-weight: bold;
+    }
+    header a:hover {
+        color: #f4f4f4;
+        font-weight: bold;
+    }
+    #showcase {
+        min-height: 400px;
+        background: url('static/img/cuidar_da_natureza.jpg') no-repeat center center;
+        background-size: cover;
+        text-align: center;
+        color: #ffffff;
+        position: relative;
+        margin-top: 60px;
+        overflow: hidden;
+    }
+    #showcase img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        opacity: 0.4;
+    }
+    #showcase::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 2;
+    }
+    #showcase .container {
+        position: relative;
+        z-index: 3;
+    }
+    #showcase h1 {
+        margin-top: 100px;
+        font-size: 55px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+    #showcase p {
+        font-size: 20px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    #main {
+        margin-top: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    .box {
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #form-section {
+        background: #ffffff;
+        padding: 30px;
+        color: #0077be;
+        margin-top: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1;
+    }
+    #form-section h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0077be;
+        font-size: 28px;
+    }
+    #form-section form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    #form-section .form-group {
+        margin-bottom: 20px;
+    }
+    #form-section label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #0077be;
+    }
+    #form-section input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #bfd8ef;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+    }
+    #form-section input[type="number"]:focus {
+        outline: none;
+        border-color: #0077be;
+        box-shadow: 0 0 0 2px rgba(0,119,190,0.2);
+    }
+    #form-section input[type="submit"] {
+        background: #0077be;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        width: auto;
+        margin: 20px auto 0;
+        display: block;
+        grid-column: 1 / -1;
+    }
+    #form-section input[type="submit"]:hover {
+        background: #005f99;
+    }
+    #charts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .chart {
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .chart img {
+        width: 100%;
+        height: auto;
+    }
+    .chart.full-width {
+        grid-column: span 2;
+    }
+    .chart.center {
+        grid-column: 1 / 3;
+        justify-self: center;
+        max-width: 50%;
+    }
+    footer {
+        padding: 20px 0;
+        color: #ffffff;
+        background-color: #0077be;
+        text-align: center;
+        border-top: #0077be 3px solid;
+        position: relative;
+        z-index: 1;
+    }
+    footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    footer p {
+        margin: 0;
+    }
+    footer a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+    #turbidity-container {
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+    #turbidity-container input {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    #charts-section {
+        background: #ffffff;
+        padding: 30px;
+        margin-top: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #charts-section h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0077be;
+        font-size: 28px;
+    }
+    .centered-title {
+        text-align: center;
+        color: #0077be;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    .raindrop {
+        position: fixed;
+        width: 3px;
+        height: 12px;
+        background: linear-gradient(transparent, #0077be);
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+        animation: fall linear infinite;
+        z-index: 1;
+    }
+    @keyframes fall {
+        to {
+            transform: translateY(100vh);
+        }
+    }
+    #rain-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+    #back-to-top-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #0077be;
+        color: #ffffff;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, opacity 0.3s ease;
+    }
+    #back-to-top-btn:hover {
+        background-color: #005f99;
+    }
+    #back-to-top-btn.hidden {
+        display: none;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-heatmap.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
-    <title>AguaPotavel</title>
-</head>
+    .logo {
+        width: 150px;
+        margin-top: 10px;
+    }
 
-<body>
-    <header>
-        <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="">
-        <nav>
-            <a href="#intro">INICIO</a>
-            <a href="#graficos">GRAFICOS</a>
-            <a href="#footer">SOBRE</a>
-        </nav>
+</style></head><body><header>
+        <div class="container">
+            <div id="branding">
+                <a href=""><img class="logo" src="{{url_for('static', filename='img/AquaSeven.svg')}}"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li class="current"><a href="#showcase">Início</a></li>
+                    <li><a href="#form-section">Previsão</a></li>
+                    <li><a href="#charts-section">Gráficos</a></li>
+                    <li><a href="#footer">Sobre</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
-    <p id="intro">Esta base de dados contém informações sobre diversos atributos de qualidade da água, como pH, dureza,
-        sólidos
-        dissolvidos, entre outros, juntamente com uma classificação indicando se a água é potável ou não. O objetivo é
-        desenvolver modelos preditivos para avaliar a potabilidade da água com base nessas características, visando
-        garantir a segurança da água para consumo humano. <br><br>
-        O principal objetivo deste conjunto de dados é avaliar e prever a potabilidade da água com base em atributos de
-        qualidade da água. Ele pode ser usado para avaliar a segurança e adequação das fontes de água para consumo
-        humano, tomar decisões informadas sobre tratamento de água e garantir conformidade com padrões de qualidade da
-        água.
-    </p>
-    <section id="graficos">
-        <div id="container">
-            <form action="{{ url_for('predict') }}" method="post">
-                <div>
-                    <label for="">PH:</label>
-                    <input type="number" id="ph" name="ph" min="0" max="14" step="0.01" required><br><br>
-                </div>
-                <div>
-                    <label for="">Hardness:</label>
-                    <input type="number" id="hardness" name="hardness" min="47.432" max="323.124" step="0.01" required
-                        oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Solids:</label>
-                    <input type="number" id="solids" name="solids" min="320.943" max="61227.196" step="0.01" required
-                        oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Chloramines:</label>
-                    <input type="number" id="chloramines" name="chloramines" min="0.352" max="13.127" step="0.01"
-                        required oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Sulfate:</label>
-                    <input type="number" id="sulfate" name="sulfate" min="129" max="481.031" step="0.01" required
-                        oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Conductivity:</label>
-                    <input type="number" id="conductivity" name="conductivity" min="181.484" max="753.343" step="0.01"
-                        required oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Organic Carbon:</label>
-                    <input type="number" id="organic_carbon" name="organic_carbon" min="2.2" max="28.3" step="0.01"
-                        required oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Trihalomethanes:</label>
-                    <input type="number" id="trihalomethanes" name="trihalomethanes" min="0.738" max="124" step="0.01"
-                        required oninput="checkValue(this)"><br><br>
-                </div>
-                <div>
-                    <label for="">Turbidity:</label>
-                    <input type="number" id="turbidity" name="turbidity" min="1.45" max="6.739" step="0.01" required
-                        oninput="checkValue(this)"><br><br>
-                </div>
-                <input id="submit" type="submit" value="Enviar">
-            </form>
-            <div id="a"><img src="{{ url_for('static', filename='img/modelos.png') }}" alt=""></div>
-        </div>
-        <div id="container">
-            <div id="b"><img src="{{ url_for('static', filename='img/pizza.png') }}" alt=""></div>
-            <div id="c"><img src="{{ url_for('static', filename='img/histograma.png') }}" alt=""></div>
-            <div id="c"><img src="{{ url_for('static', filename='img/heatmap.png') }}" alt=""></div>
-        </div>
-        <div id="container">
-            <div id="d"><img src="{{ url_for('static', filename='img/matrix.png') }}" alt=""></div>
+
+    <section id="showcase">
+        <div class="container">
+            <h1>Previsão de Qualidade da Água</h1>
+            <p>Utilizando ciência de dados para garantir água potável e segura</p>
         </div>
     </section>
-    <footer id="footer">
-        <div>
-            <h3>Alunos</h3>
-            <h4>Raniel Luna</h4>
-            <h4>Lucca Amaral</h4>
-            <h4>Luis Brasiliano</h4>
+    
+    <div id="rain-container"></div>
+    
+    <button id="back-to-top-btn" onclick="scrollToTop()">↑</button>
+    
+    <section id="main">
+        <div class="container">
+            <div id="about-section" class="box">
+                <h2 class="centered-title">Previsão de Potabilidade da Água</h2>
+                <p>Esta base de dados contém informações sobre diversos atributos de qualidade da água, como pH, dureza, sólidos dissolvidos, entre outros, juntamente com uma classificação indicando se a água é potável ou não. O objetivo é desenvolver modelos preditivos para avaliar a potabilidade da água com base nessas características, visando garantir a segurança da água para consumo humano.</p>
+                <p>O principal objetivo deste conjunto de dados é avaliar e prever a potabilidade da água com base em atributos de qualidade da água. Ele pode ser usado para avaliar a segurança e adequação das fontes de água para consumo humano, tomar decisões informadas sobre tratamento de água e garantir conformidade com padrões de qualidade da água.</p>
+            </div>
+
+            <div id="form-section" class="box">
+                <h2 class="centered-title">Inserir Dados para Previsão</h2>
+                <form action="{{ url_for('predict') }}" method="post">
+                    <div>
+                        <label for="">PH:</label>
+                        <input type="number" id="ph" name="ph" min="0" max="14" step="0.01" required placeholder="Ex: 7.5"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Hardness:</label>
+                        <input type="number" id="hardness" name="hardness" min="47.432" max="323.124" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 180.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Solids:</label>
+                        <input type="number" id="solids" name="solids" min="320.943" max="61227.196" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 20000.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Chloramines:</label>
+                        <input type="number" id="chloramines" name="chloramines" min="0.352" max="13.127" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 7.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Sulfate:</label>
+                        <input type="number" id="sulfate" name="sulfate" min="129" max="481.031" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 300.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Conductivity:</label>
+                        <input type="number" id="conductivity" name="conductivity" min="181.484" max="753.343" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 500.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Organic Carbon:</label>
+                        <input type="number" id="organic_carbon" name="organic_carbon" min="2.2" max="28.3" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 10.0"><br><br>
+                    </div>
+                    <div>
+                        <label for="">Trihalomethanes:</label>
+                        <input type="number" id="trihalomethanes" name="trihalomethanes" min="0.738" max="124" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 50.0"><br><br>
+                    </div>
+                    <div id="turbidity-container">
+                        <label for="">Turbidity:</label>
+                        <input type="number" id="turbidity" name="turbidity" min="1.45" max="6.739" step="0.01" required oninput="checkValue(this)" placeholder="Ex: 4.0"><br><br>
+                    </div>
+                    <input id="submit" type="submit" value="Enviar">
+                </form>
+            </div>
+
+            <div id="charts-section" class="box">
+                <h2 class="centered-title">Gráficos</h2>
+                <div id="charts">
+                    <div class="chart full-width">
+                        <img src="{{url_for('static', filename='img/matriz.png')}}" alt="Matriz" width="800" height="400">
+                    </div>
+                    <div class="chart full-width">
+                        <img src="{{url_for('static', filename='img/modelos.png')}}" alt="Modelos" width="800" height="400">
+                    </div>
+                    <div class="chart center">
+                        <img src="{{url_for('static', filename='img/pizza.png')}}" alt="Pizza" width="400" height="300">
+                    </div>
+                    <div class="chart">
+                        <img src="{{url_for('static', filename='img/heatmap.png')}}" alt="Heatmap" width="400" height="300">
+                    </div>
+                    <div class="chart">
+                        <img src="{{url_for('static', filename='img/histograma.png')}}" alt="Histograma" width="400" height="300">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
-                    href="https://github.com/ranielluna">ranielluna</a></div>
-            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
-                    href="https://github.com/renelucca">renelucca</a></div>
-            <div id="github"><img src="{{ url_for('static', filename='img/github.png') }}" alt=""><a
-                    href="https://github.com/luisbrasiliano21">luisbrasiliano21</a></div>
+    </section>
+
+    <footer id="footer">
+        <div class="container">
+            <div id="branding">
+                <a href=""><img class="logo" src="{{url_for('static', filename='img/AquaSeven.svg')}}" alt=""></a>
+            </div>
+            <p>&copy; 2024 | <a href="https://github.com/ranielluna/AquaSeven">GitHub</a></p>
         </div>
     </footer>
-</body>
+
+    <script>
+        const rainContainer = document.getElementById('rain-container');
+        const backToTopBtn = document.getElementById('back-to-top-btn');
+        const footer = document.getElementById('footer');
+
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            const startPosX = Math.random() * window.innerWidth;
+            raindrop.style.left = `${startPosX}px`;
+            raindrop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+            raindrop.style.animationDelay = `${Math.random() * 1.5}s`;
+            rainContainer.appendChild(raindrop);
+
+            setTimeout(() => {
+                raindrop.remove();
+            }, (parseFloat(raindrop.style.animationDuration) * 1000) + parseFloat(raindrop.style.animationDelay) * 1000);
+        }
+
+        function createRain() {
+            for (let i = 0; i < 12; i++) {
+                setTimeout(createRaindrop, i * 300);
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkBackToTopBtnVisibility() {
+            const rect = footer.getBoundingClientRect();if (rect.top <= window.innerHeight && rect.bottom >= 0) {
+                backToTopBtn.classList.add('hidden');
+            } else {
+                backToTopBtn.classList.remove('hidden');
+            }
+        }
+
+        setInterval(createRain, 2000);
+        window.addEventListener('load', createRain);
+        window.addEventListener('scroll', checkBackToTopBtnVisibility);
+
+        checkBackToTopBtnVisibility();
+    </script>
+
 <script id="script">
     const potavel = document.getElementById("resultado")
     function checkValue(input) {
@@ -135,10 +486,5 @@
         return true;
     }
 </script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-<script src="{{ url_for('static', filename='scripts/histograma.js') }}"></script>
-<script src="{{ url_for('static', filename='scripts/pizza.js') }}"></script>
-<script src="{{ url_for('static', filename='scripts/heatmap.js') }}"></script>
-<script src="{{ url_for('static', filename='scripts/rank.js') }}"></script>
-
+</body>
 </html>

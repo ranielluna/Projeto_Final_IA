@@ -1,17 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
-    <title>Resultado da Previsão</title>
+<html><head>
+    <title>Resultado de Potabilidade da Água</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/icons8-água-32.png')}}">
+    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f0f8ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+        position: relative;
+        z-index: 100;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #0077be;
+    }
+    .result {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .potavel {
+        color: green;
+        font-weight: bold;
+    }
+    .nao-potavel {
+        color: red;
+        font-weight: bold;
+    }
+    a {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #0077be;
+        color: #ffffff;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        margin-top: 15px;
+    }
+    a:hover {
+        background: #005f99;
+    }
+    .raindrop {
+        position: absolute;
+        width: 3px;
+        height: 12px;
+        background: linear-gradient(transparent, #0077be);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: fall linear infinite;
+        opacity: 0.8;
+        z-index: 1;
+    }
+    @keyframes fall {
+        to {
+            transform: translateY(100vh);
+        }
+    }
+    #rain-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+    }
+</style>
 </head>
 <body>
-    <div id="fundo">
-    <h1 id="resultado_titulo">Resultado da Previsão</h1>
-    <p id="resultado">{{ result }} Jovenzinho!</p>
-    <a href="http://"></a>
-</div>
+    <div class="container">
+        <h1>Resultado de Potabilidade da Água</h1>
+        <p id="resultado">O resultado analisado é: <span class="{% if result == 'Água potável' %}potavel{% else %}nao-potavel{% endif %}">{{ result }}</span></p>
+        <a href="{{ url_for('index') }}">Verificar Outro Resultado</a>
+    </div>
+    <div id="rain-container"></div>
+    <script>
+        const rainContainer = document.getElementById('rain-container');
+
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            const startPosX = Math.random() * window.innerWidth;
+            raindrop.style.left = `${startPosX}px`;
+            raindrop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+            raindrop.style.animationDelay = `${Math.random() * 1.5}s`;
+            rainContainer.appendChild(raindrop);
+
+            setTimeout(() => {
+                raindrop.remove();
+            }, (parseFloat(raindrop.style.animationDuration) * 1000) + parseFloat(raindrop.style.animationDelay) * 1000);
+        }
+
+        function createRain() {
+            for (let i = 0; i < 12; i++) {
+                setTimeout(createRaindrop, i * 300);
+            }
+        }
+
+        setInterval(createRain, 2000);
+        window.addEventListener('load', createRain);
+    </script>
 </body>
-    <script src="../templates/index.html"></script>
 </html>

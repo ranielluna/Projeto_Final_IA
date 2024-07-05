@@ -39,9 +39,9 @@ def predict():
     
     # Determinar a mensagem de retorno com base na previsão
     if prediction[0] == 1:
-        result = 'Água potável, '
+        result = 'Água potável'
     else:
-        result = 'Água não potável, '
+        result = 'Água não potável'
     # Redirecionar o usuário para a página de resultado com a mensagem
     return redirect(url_for('result', result=result))
 
